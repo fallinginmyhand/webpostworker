@@ -22,8 +22,9 @@ var (
 func main() {
 
 	flag.Parse()
+	fmt.Println("Ver:0.1")
 	if *showver {
-		fmt.Println("Ver:0.1")
+
 		return
 	}
 	var netTransport = &http.Transport{
@@ -36,26 +37,27 @@ func main() {
 
 	var nc = &http.Client{Timeout: time.Millisecond * 4000,
 		Transport: netTransport}
-	fmt.Printf("Import file:%s", *file)
+	fmt.Printf("Import file:\t%s\n", *file)
 	filetext, err := ioutil.ReadFile(*file)
 
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	fmt.Printf("URL is: %s \n", *url)
+	fmt.Printf("URL:\t\t%s\n", *url)
 	req, err := http.NewRequest("POST", *url, strings.NewReader(string(filetext)))
 
 	req.Header.Add("Content-Type", *contype)
-	fmt.Printf("Content-Type is: %s \n", *contype)
+	fmt.Printf("Content-Type:\t%s \n", *contype)
 	resp, err := nc.Do(req)
 
 	if err == nil {
 		fmt.Printf("File Sent %v\n", resp.StatusCode)
-		fmt.Println()
+
 		defer resp.Body.Close()
 
+	} else {
+		fmt.Println(err)
 	}
-	fmt.Println(err)
 
 }
